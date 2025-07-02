@@ -22,7 +22,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    padding: 10px;
+    padding: 20px; /* Padding untuk layar besar */
 }
 
 #chat-container {
@@ -44,6 +44,7 @@ body {
     border-bottom: 1px solid #444;
     display: flex;
     align-items: center;
+    flex-shrink: 0; /* Mencegah header menyusut */
 }
 
 .chat-header h1 {
@@ -78,16 +79,16 @@ body {
 .avatar {
     width: 40px;
     height: 40px;
-    min-width: 40px; /* Tambahkan ini agar tidak menyusut */
+    min-width: 40px;
     border-radius: 50%;
     margin-right: 15px;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 60%; /* Ukuran ikon di dalam lingkaran */
+    background-size: 60%;
 }
 
 .message-content {
-    max-width: 80%;
+    max-width: 85%; /* Sedikit lebih lebar untuk mobile */
 }
 
 .sender-name {
@@ -101,13 +102,11 @@ body {
     padding: 12px 15px;
     border-radius: 15px;
     line-height: 1.5;
+    word-wrap: break-word; /* Memastikan teks panjang tidak meluber */
 }
 
-/* === PERUBAHAN UTAMA DI SINI === */
-
 .message.gubernur .avatar {
-    background-color: rgba(255, 170, 0, 0.1); /* Warna latar belakang lingkaran */
-    /* SVG untuk ikon Mahkota, warnanya diambil dari variabel --gubernur-color */
+    background-color: rgba(255, 170, 0, 0.1);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffaa00'%3E%3Cpath d='M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1v-1h14v1z'%3E%3C/path%3E%3C/svg%3E");
 }
 .message.gubernur .sender-name {
@@ -115,15 +114,12 @@ body {
 }
 
 .message.assistant .avatar {
-    background-color: rgba(0, 255, 170, 0.1); /* Warna latar belakang lingkaran */
-    /* SVG untuk ikon Profil, warnanya diambil dari variabel --assistant-color */
+    background-color: rgba(0, 255, 170, 0.1);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ffaa'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'%3E%3C/path%3E%3C/svg%3E");
 }
 .message.assistant .sender-name {
     color: var(--assistant-color);
 }
-/* === AKHIR PERUBAHAN UTAMA === */
-
 
 #input-area {
     padding: 20px;
@@ -132,6 +128,8 @@ body {
     display: flex;
     justify-content: center;
     gap: 10px;
+    flex-wrap: wrap; /* Memungkinkan tombol turun ke baris baru jika tidak muat */
+    flex-shrink: 0;
 }
 
 .response-button {
@@ -166,4 +164,52 @@ a {
     0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
     70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
     100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+
+
+/* === PERUBAHAN UTAMA: RESPONSIVE DESIGN === */
+
+@media (max-width: 768px) {
+    body {
+        padding: 0; /* Hapus padding agar kontainer bisa full-screen */
+    }
+
+    #chat-container {
+        height: 100vh; /* Tinggi penuh layar */
+        max-height: 100vh; /* Batasi tinggi maksimal */
+        border-radius: 0; /* Hapus sudut melengkung di mode mobile */
+        border: none; /* Hapus border di mode mobile */
+    }
+
+    .chat-header h1 {
+        font-size: 16px; /* Perkecil font judul */
+    }
+    
+    .avatar {
+        width: 35px; /* Perkecil avatar */
+        height: 35px;
+        min-width: 35px;
+        margin-right: 10px; /* Perkecil jarak avatar */
+    }
+
+    #message-list {
+        padding: 15px; /* Kurangi padding list pesan */
+    }
+
+    .sender-name {
+        font-size: 13px;
+    }
+    
+    .text-bubble {
+        padding: 10px 14px; /* Kurangi padding di dalam bubble */
+    }
+
+    #input-area {
+        padding: 15px 10px; /* Kurangi padding area input */
+    }
+    
+    .response-button {
+        padding: 8px 16px; /* Perkecil tombol */
+        font-size: 14px;
+    }
 }
