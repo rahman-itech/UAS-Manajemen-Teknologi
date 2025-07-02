@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandat Digital: Briefing Aman</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="chat-container">
+        <div class="chat-header">
+            <h1>Sistem Briefing Aman - Kantor Gubernur PPS</h1>
+            <div class="status-indicator"></div>
+            <span>Online</span>
+        </div>
+        <div id="message-list">
+            <!-- Pesan-pesan akan muncul di sini melalui JavaScript -->
+        </div>
+        <div id="input-area">
+            <!-- Tombol-tombol interaktif akan muncul di sini -->
+        </div>
+    </div>
+
+    <!-- Template untuk pesan chat -->
+    <template id="message-template">
+        <div class="message">
+            <div class="avatar"></div>
+            <div class="message-content">
+                <div class="sender-name"></div>
+                <div class="text-bubble"></div>
+            </div>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', e => {
+                if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) { e.preventDefault(); }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) { e.preventDefault(); }
+                if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); }
+            });
+        });
+    </script>
+</body>
+</html>

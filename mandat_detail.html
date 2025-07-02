@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Center: Gerbang Digital Indonesia Timur</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #eef2f5;
+            --panel-bg: #ffffff;
+            --header-bg: #005A9C;
+            --header-text: #ffffff;
+            --title-color: #005A9C;
+            --text-color: #334155;
+            --accent-color: #38bdf8;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-areas:
+                "header header header"
+                "mandate tasks tasks"
+                "intel tasks tasks"
+                "protocol protocol submission";
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: auto;
+            opacity: 0;
+            animation: fadeInDashboard 0.5s ease-in-out forwards;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .panel-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            color: var(--title-color);
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--title-color);
+        }
+
+        .dashboard-header {
+            grid-area: header;
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            text-align: center;
+            padding: 25px;
+            border-radius: 12px;
+        }
+        
+        .dashboard-header h1 {
+            font-family: 'Fira Code', monospace;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-header .status {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #34d399;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .map-panel {
+            grid-area: mandate;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .map-panel .panel-header { padding: 25px; }
+        .map-panel iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+        .map-panel .mandate-text { padding: 25px; }
+
+        .tasks-panel { grid-area: tasks; }
+        .intel-panel { grid-area: intel; }
+        .protocol-panel { grid-area: protocol; }
+        .submission-panel { grid-area: submission; }
+        
+        .accordion-item {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        
+        .accordion-item summary {
+            font-weight: 600;
+            padding: 15px;
+            cursor: pointer;
+            list-style: none; /* remove default arrow */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f9fafb;
+        }
+        
+        .accordion-item summary::after {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 400;
+            transition: transform 0.3s;
+        }
+        
+        .accordion-item[open] summary::after {
+            transform: rotate(45deg);
+        }
+
+        .accordion-content {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .accordion-content h4 {
+            color: var(--title-color);
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .accordion-content h5 {
+             color: var(--text-color);
+             margin-top: 15px;
+             margin-bottom: 10px;
+             font-weight: 700;
+        }
+        .custom-list-item {
+             padding-left: 20px;
+             position: relative;
+             margin-bottom: 10px;
+        }
+        .custom-list-item::before {
+            content: '»';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        a {
+            color: var(--accent-color);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+        
+        .final-note {
+            background-color: #e0f2fe;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-style: italic;
+        }
+
+        @keyframes fadeInDashboard { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 #34d399; } 70% { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); } }
+
+        @media (max-width: 1200px) {
+            .dashboard-container {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "header header"
+                    "mandate tasks"
+                    "intel tasks"
+                    "protocol submission";
+            }
+        }
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "header"
+                    "mandate"
+                    "tasks"
+                    "intel"
+                    "protocol"
+                    "submission";
+            }
+            .map-panel iframe { height: 250px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Gerbang Digital Indonesia Timur</h1>
+            <div class="status"><div class="status-dot"></div>MISI AKTIF</div>
+        </header>
+
+        <div class="panel map-panel">
+            <div class="panel-header">
+                 <svg class="panel-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.5-10.5h-7a2.25 2.25 0 00-2.25 2.25v10.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-10.5a2.25 2.25 0 00-2.25-2.25z" /></svg>
+                <h2 class="panel-title">MANDAT UTAMA</h2>
+            </div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1009893.9119280148!2d117.47097721867802!3d-8.623473121543085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dcb7f613c1f2373%3A0x303129a2e75b680!2sSumbawa%2C%20Nusa%20Tenggara%20Bar.!5e0!3m2!1sid!2sid!4v1678888888888!5m2!1sid!2sid" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="mandate-text">
+                <p><strong>Peran Anda:</strong> Kepala Kantor Transformasi Digital, Provinsi Pulau Sumbawa.</p>
+                <p><strong>Misi:</strong> Menerjemahkan visi besar "Gerbang Digital Indonesia Timur" menjadi sebuah cetak biru nyata yang akan menjadikan PPS pusat inovasi dan kemajuan di kawasan.</p>
+            </div>
+        </div>
+
+        <div class="panel tasks-panel">
+             <div class="panel-header">
+                <svg class="panel-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <h2 class="panel-title">INSTRUKSI TUGAS</h2>
+            </div>
+            <p>Susunlah sebuah Blueprint Kebijakan Strategis yang akan menjadi panduan pengembangan digital Provinsi Pulau Sumbawa untuk 5 tahun ke depan. Dokumen Anda harus menjawab tugas-tugas berikut secara terstruktur:</p>
+            
+            <details class="accordion-item" open>
+                <summary>BAGIAN 1: FONDASI STRATEGIS</summary>
+                <div class="accordion-content">
+                    <h4>Menjabarkan Visi "Gerbang Digital Indonesia Timur":</h4>
+                    <p>Jelaskan visi ini secara strategis. Anda harus menguraikan bagaimana visi "Gerbang Digital Indonesia Timur" ini akan:</p>
+                    <div class="custom-list-item">Pertama, menjawab masalah internal, yaitu dengan mengatasi isu inti ketidakadilan, pemerataan pembangunan, dan birokrasi yang jauh seperti yang disuarakan masyarakat Sumbawa.</div>
+                    <div class="custom-list-item">Kedua, menciptakan peran eksternal, yaitu dengan memposisikan Provinsi Pulau Sumbawa sebagai hub atau pusat teknologi, data, dan perdagangan digital yang vital bagi kemajuan kawasan Indonesia Timur.</div>
+                    
+                    <h4>Merancang "Sumbawa Digital Platform (SDP)":</h4>
+                    <p>Sebagai fondasi "Gerbang Digital", Anda harus merancang platform terpadu.</p>
+                    <div class="custom-list-item">Jelaskan kepada Gubernur mengapa arsitektur platform ini wajib berbasis SOA (Service-Oriented Architecture) dan berjalan di atas Cloud Computing untuk menjamin kelincahan dan skalabilitas di masa depan.</div>
+                    <div class="custom-list-item">Sebutkan dan jelaskan 3 (tiga) "layanan" digital inti yang akan menjadi fondasi dari platform ini (misalnya, Layanan Identitas Digital Warga, Layanan Pembayaran Terpadu, dan lain-lain).</div>
+                </div>
+            </details>
+
+            <details class="accordion-item">
+                <summary>BAGIAN 2: PROGRAM UNGGULAN</summary>
+                <div class="accordion-content">
+                    <p>Pilih dan jelaskan secara detail DUA (2) dari tiga program unggulan berikut, yang akan menjadi bukti nyata dari visi "Gerbang Digital Indonesia Timur":</p>
+                    <h5>Program A: Akses Keadilan, Layanan Publik Tanpa Batas Laut:</h5>
+                    <p>Rancang sebuah program untuk layanan kependudukan dan perizinan usaha yang sepenuhnya digital. Bagaimana sistem ini memastikan warga di Bima atau Dompu bisa mengurus dokumen penting dengan sama cepatnya seperti warga di ibu kota provinsi?</p>
+                    <h5>Program B: Ekonomi Unggul, Dari Potensi Lokal ke Gerbang Ekspor Global:</h5>
+                    <p>Mengingat artikel berita menyebutkan potensi luar biasa seperti Gunung Tambora, Pantai Lakey, kopi, madu, dan tenun, buatlah kerangka kerja strategis untuk sebuah platform e-commerce dan pariwisata terintegrasi. Jelaskan konsep, fitur utama, dan model operasional platform ini agar tidak hanya memasarkan produk lokal, tetapi juga berfungsi sebagai gerbang ekspor digital bagi UMKM di Sumbawa dan sekitarnya.</p>
+                    <h5>Program C: Generasi Sehat & Cerdas Sumbawa:</h5>
+                    <p>Merespons harapan masyarakat akan adanya rumah sakit rujukan provinsi dan universitas negeri, rancanglah sebuah program layanan kesehatan dan pendidikan digital. Bagaimana Anda akan menggunakan teknologi untuk memberikan layanan konsultasi kesehatan (telemedicine) dan akses materi pendidikan berkualitas tinggi bagi warga di daerah paling terpencil?</p>
+                    <p>(Untuk setiap program yang dipilih, sebutkan 1 sampai 2 contoh metrik keberhasilan (KPI) yang menunjukkan bahwa program Anda benar-benar meningkatkan kesejahteraan dan mengurangi ketimpangan).</p>
+                </div>
+            </details>
+
+            <details class="accordion-item">
+                <summary>BAGIAN 3: TATA KELOLA & ETIKA</summary>
+                <div class="accordion-content">
+                    <h4>Strategi Pertahanan dan Kedaulatan Siber:</h4>
+                    <p>Sebagai "Gerbang Digital", sistem kita adalah aset nasional yang menjadi target utama. Identifikasi 2 (dua) ancaman siber paling serius yang Anda khawatirkan akan menyerang sistem pemerintahan digital Provinsi Pulau Sumbawa. Sebagai referensi untuk memahami berbagai jenis ancaman yang ada, Anda dapat melihat pada pembahasan di tautan berikut: <a href="https://www.sciencedirect.com/science/article/pii/S2772918423000188" target="_blank">https://www.sciencedirect.com/science/article/pii/S2772918423000188</a>. Setelah mengidentifikasi ancaman tersebut, jelaskan secara sederhana bagaimana Anda akan melindungi data warga berdasarkan prinsip-prinsip keamanan informasi.</p>
+                    <h4>Kerangka Etika AI, Mencegah Ketidakadilan Digital:</h4>
+                    <p>Gubernur ingin menggunakan AI untuk menyalurkan Bantuan Sosial (Bansos) agar tepat sasaran.</p>
+                    <div class="custom-list-item">Jelaskan kepada Gubernur risiko "bias algoritmik". Mengapa AI bisa secara tidak sengaja menciptakan bentuk ketidakadilan baru yang bersifat digital, sebuah kondisi di mana warga miskin yang datanya tidak lengkap malah terlewat dari bantuan?</div>
+                    <div class="custom-list-item">Usulkan 2 (dua) aturan main atau kebijakan etis yang harus diterapkan untuk memastikan penggunaan AI ini adil dan transparan bagi seluruh masyarakat Sumbawa.</div>
+                </div>
+            </details>
+        </div>
+
+        <div class="panel intel-panel">
+            <div class="panel-header">
+                <svg class="panel-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                <h2 class="panel-title">SUMBER INTELIJEN</h2>
+            </div>
+            <p>Gunakan sumber daya berikut sebagai landasan analisis Anda.</p>
+            <br/>
+            <h4>Konteks Aspirasi Masyarakat:</h4>
+            <a href="https://www.bimakini.com/2025/06/provinsi-baru-harapan-baru-masyarakat-pulau-sumbawa/" target="_blank">Buka Artikel Berita (BimaKini.com)</a>
+            <br/><br/>
+            <h4>Referensi Ancaman Siber:</h4>
+            <a href="https://www.sciencedirect.com/science/article/pii/S2772918423000188" target="_blank">Buka Jurnal Ilmiah (ScienceDirect)</a>
+        </div>
+        
+        <div class="panel protocol-panel">
+            <div class="panel-header">
+                <svg class="panel-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5l3 3m0 0l3-3m-3 3v-6m1.06-4.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" /></svg>
+                <h2 class="panel-title">PROTOKOL PENYERAHAN</h2>
+            </div>
+            <p><strong>Jenis Dokumen:</strong> Jawaban disusun dalam satu file PDF sebagai "Blueprint Kebijakan Strategis".</p>
+            <p><strong>Panjang Maksimal:</strong> 10 Halaman (tidak termasuk halaman judul dan lampiran).</p>
+            <p><strong>Gaya Bahasa:</strong> Profesional, jelas, dan persuasif.</p>
+        </div>
+
+        <div class="panel submission-panel">
+            <div class="panel-header">
+                <svg class="panel-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>
+                <h2 class="panel-title">STRUKTUR DOKUMEN</h2>
+            </div>
+            <div class="custom-list-item">Halaman Judul</div>
+            <div class="custom-list-item">Ringkasan Eksekutif (Maksimal 1 halaman penuh)</div>
+            <div class="custom-list-item">Bagian 1: Jawaban Anda untuk tugas 1 dan 2.</div>
+            <div class="custom-list-item">Bagian 2: Jawaban detail untuk DUA program unggulan.</div>
+            <div class="custom-list-item">Bagian 3: Jawaban Anda untuk tugas 3 dan 4.</div>
+            <div class="custom-list-item">Lampiran (Opsional).</div>
+            <div class="final-note">
+                <p>Ingat, dokumen ini bukan sekadar jawaban ujian. Ini adalah respons Anda terhadap harapan dan perjuangan panjang jutaan rakyat Sumbawa.</p>
+            </div>
+        </div>
+
+    </div>
+    
+    <script>
+        // Sedikit javascript untuk memastikan dashboard muncul dengan mulus.
+        window.onload = function() {
+            document.querySelector('.dashboard-container').style.opacity = '1';
+        };
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', e => {
+                if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) { e.preventDefault(); }
+                if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) { e.preventDefault(); }
+                if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); }
+            });
+        });
+    </script>
+</body>
+</html>
